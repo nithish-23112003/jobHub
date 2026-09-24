@@ -24,6 +24,11 @@ public class HomeController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/ping")
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok("OK");
+    }
+
     @GetMapping("/stats")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getHomeStats() {
         long totalJobs = jobRepository.count();

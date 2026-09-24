@@ -16,12 +16,12 @@ public class KeepAliveScheduler {
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
-    // Self-ping Render backend every 4 minutes (240,000 ms) to keep server awake 24/7 with ZERO sleep mode
-    @Scheduled(fixedRate = 240000, initialDelay = 30000)
+    // Self-ping Render backend every 2 minutes (120,000 ms) to keep server awake 24/7 with ZERO sleep mode
+    @Scheduled(fixedRate = 120000, initialDelay = 15000)
     public void keepAliveSelfPing() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://jobhub-backend-cigg.onrender.com/api/home/stats"))
+                    .uri(URI.create("https://jobhub-backend-cigg.onrender.com/api/home/ping"))
                     .timeout(Duration.ofSeconds(10))
                     .GET()
                     .build();

@@ -81,7 +81,7 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Global error handling & automatic cache invalidation on mutations
+// Response Interceptor: Global error handling, auto-retry on cold-start timeouts & cache invalidation
 API.interceptors.response.use(
   (response) => {
     // Invalidate cache on mutations (POST, PUT, DELETE)
@@ -90,7 +90,15 @@ API.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
+  async (error) => {
+    const config = error.config;
+    // Automatic 1-retry for network errors or timeouts during server cold start
+    if (config && !config._retry && (error.code === 'ECONNABORTED' || !error.response)) {
+      config._retry = true;
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      return API(config);
+    }
+
     if (error.response && error.response.status === 401) {
       // Token expired or invalid
       localStorage.removeItem('jobhub_token');
