@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Ensure base URL always ends with /api regardless of Vercel env variable formatting
 const getApiBaseUrl = () => {
-  let url = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+  let url ='http://localhost:8000/api';
   url = url.trim().replace(/\/+$/, ''); // Remove trailing slashes
   if (!url.endsWith('/api')) {
     url += '/api';
